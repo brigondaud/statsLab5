@@ -7,4 +7,18 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Title
+## Import and Pre-processing
+
+```{r}
+NAm2 = read.table("NAm2.txt", header=TRUE)
+
+subset = subset(NAm2, Pop == "Chipewyan" | Pop == "Pima" | Pop == "Huilliche")
+```
+
+### 7
+Describe thanks to the several values in script question 7. TODO
+
+### 10
+This piece of code plots the modulairty considering a number of communities in the graph from 1 to 10. It seems that 9 is the number of communities that minimalizes the modularity, thus 9 is the number of communities that seems the most appropriate.
+TODO: improve ??
+
