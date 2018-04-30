@@ -1,0 +1,2 @@
+NAm2 = read.table("NAm2.txt", header=TRUE)
+
