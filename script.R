@@ -13,12 +13,8 @@ diag(adj) = 0
 
 # 3
 q = quantile(adj, prob = 0.7)
-adj <- adj - q # Translation to normalize
-adj[adj <=  0] = 0
-#adj[adj > 0] = 1
-select <- rowSums(adj == 0) < nrow(adj) - 2
-#adj[rowSums(adj == 1) < length(adj) - 2]
-#select = rowSums(adj) >= 2
+adj[adj <=  q] = 0
+select <- rowSums(adj > 0) >= 2
 adj = adj[select, select]
 
 # 4
@@ -41,7 +37,7 @@ mean_distance(g)
 sim = similarity(g)
 
 # 9
-res_hclust = hclust(as.dist(sim))
+res_hclust = hclust(as.dist(1-sim))
 
 # 10
 mod = c()
@@ -51,6 +47,24 @@ for (i in 1:10){
 }
 plot(mod,type="l")
 
+comMax = which(mod == max(mod))[1]
+
 # 11
+labels = cutree(res_hclust, comMax)
+V(g)$color = labels
+plot(g, vertex.label=NA, layout = l, vertex.size = 5)
 
+# 12
 
+com = igraph::cluster_edge_betweenness(g)
+dendPlot(com)
+
+# 13
+mods =  sapply(0:ecount(g), function(i){
+  g2 = delete.edges(g, com$removed.edges[seq(length=i)])
+  cl = clusters(g2)$membership
+  modularity(g,cl)
+})
+g2<-delete.edges(g, com$removed.edges[seq(length=which.max(mods)-1)])
+V(g)$color=clusters(g2)$membership
+plot(g, vertex.label=NA, layout = l, vertex.size = 5)
